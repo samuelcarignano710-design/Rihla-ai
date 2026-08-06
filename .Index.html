@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rihla | رحلة — دليلك السياحي الذكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep-blue:#123B54;
+    --mid-blue:#2E7D9E;
+    --sea-blue:#DCEEF2;
+    --cream:#FBF8F3;
+    --white:#FFFFFF;
+    --terracotta:#C4643F;
+    --gold:#C9A227;
+    --ink:#12242C;
+    --shadow: 0 12px 32px rgba(18,59,84,0.14);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Cairo', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+
+  [dir="ltr"] body, .lang-en, .lang-fr{
+    font-family:'Cairo', sans-serif;
+  }
+
+  .tile-pattern{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    opacity:0.05;
+    background-image:
+      radial-gradient(circle at 25% 25%, var(--mid-blue) 2px, transparent 2.5px),
+      radial-gradient(circle at 75% 75%, var(--terracotta) 2px, transparent 2.5px);
+    background-size:48px 48px;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 6%;
+    background:transparent;
+  }
+
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .logo-mark{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    background:conic-gradient(from 210deg, var(--deep-blue), var(--mid-blue) 40%, var(--gold) 70%, var(--terracotta) 100%);
+    position:relative;
+    flex-shrink:0;
+  }
+  .logo-mark::after{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border-radius:50%;
+    background:var(--cream);
+  }
+  .logo-mark::before{
+    content:"";
+    position:absolute;
+    top:50%; left:50%;
+    width:5px; height:5px;
+    background:var(--terracotta);
+    border-radius:50%;
+    transform:translate(-50%,-50%) rotate(0deg);
+    box-shadow: 0 -13px 0 -1px var(--deep-blue);
+    animation:spin-needle 8s linear infinite;
+  }
+  @keyframes spin-needle{
+    to{ transform:translate(-50%,-50%) rotate(360deg); }
+  }
+
+  .logo-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1.2;
+  }
+  .logo-text .name-lat{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--deep-blue);
+  }
+  .logo-text .name-ar{
+    font-size:14px;
+    font-weight:600;
+    color:var(--terracotta);
+    letter-spacing:0.5px;
+  }
+
+  .lang-switch{
+    display:flex;
+    gap:6px;
+    background:var(--white);
+    padding:5px;
+    border-radius:999px;
+    box-shadow:var(--shadow);
+  }
+  .lang-switch button{
+    border:none;
+    background:transparent;
+    padding:8px 16px;
+    border-radius:999px;
+    font-family:'Cairo', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color:var(--deep-blue);
+    cursor:pointer;
+    transition:all .25s ease;
+  }
+  .lang-switch button.active{
+    background:var(--deep-blue);
+    color:var(--white);
+  }
+
+  .hero{
+    text-align:center;
+    padding:40px 6% 10px;
+    max-width:820px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    margin-bottom:18px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:"";
+    width:26px;
+    height:1px;
+    background:var(--terracotta);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(32px, 5vw, 52px);
+    color:var(--deep-blue);
+    margin-bottom:18px;
+  }
+  [lang="ar-h1"]{ font-family:'Cairo', sans-serif; font-weight:800; }
+
+  .subhead{
+    font-size:17px;
+    color:#3f5a68;
+    max-width:600px;
+    margin:0 auto 42px;
+  }
+
+  .search-panel{
+    background:var(--white);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:28px;
+    max-width:760px;
+    margin:0 auto 8px;
+    border:1px solid rgba(18,59,84,0.06);
+    position:relative;
+  }
+  .search-panel::before{
+    content:"";
+    position:absolute;
+    top:-1px; right:-1px; left:-1px;
+    height:5px;
+    border-radius:24px 24px 0 0;
+    background:linear-gradient(90deg, var(--deep-blue), var(--mid-blue), var(--gold), var(--terracotta));
+  }
+
+  textarea{
+    width:100%;
+    min-height:130px;
+    resize:vertical;
+    border:2px solid #E7EEF1;
+    border-radius:14px;
+    padding:16px 18px;
+    font-family:'Cairo', sans-serif;
+    font-size:16px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s ease;
+    background:#FCFCFB;
+  }
+  textarea:focus{
+    border-color:var(--mid-blue);
+  }
+  textarea::placeholder{ color:#93A5AD; }
+
+  .panel-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:16px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .hint{
+    font-size:13px;
+    color:#8095A0;
+  }
+
+  .search-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--deep-blue);
+    color:var(--white);
+    border:none;
+    padding:14px 30px;
+    border-radius:14px;
+    font-family:'Cairo', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+    box-shadow:0 8px 20px rgba(18,59,84,0.25);
+  }
+  .search-btn:hover{
+    background:var(--mid-blue);
+    transform:translateY(-2px);
+  }
+  .search-btn:active{ transform:translateY(0); }
+  .search-btn svg{ width:18px; height:18px; }
+
+  .search-btn.loading{
+    pointer-events:none;
+    opacity:0.85;
+  }
+  .spinner{
+    width:16px; height:16px;
+    border:2.5px solid rgba(255,255,255,0.4);
+    border-top-color:#fff;
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    display:none;
+  }
+  .search-btn.loading .spinner{ display:inline-block; }
+  .search-btn.loading .btn-icon{ display:none; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .coastline{
+    width:100%;
+    height:70px;
+    margin-top:50px;
+    display:block;
+  }
+
+  .results-section{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 6% 90px;
+    min-height:120px;
+  }
+
+  .results-heading{
+    text-align:center;
+    margin-bottom:36px;
+    display:none;
+  }
+  .results-heading.show{ display:block; animation:fadeUp .5s ease; }
+  .results-heading h2{
+    font-family:'Fraunces', serif;
+    font-size:28px;
+    color:var(--deep-blue);
+    font-weight:600;
+  }
+  .results-heading p{
+    color:#5C7684;
+    font-size:14px;
+    margin-top:6px;
+  }
+
+  .empty-state{
+    text-align:center;
+    color:#9FB1B8;
+    padding:50px 20px;
+    font-size:15px;
+  }
+  .empty-state svg{
+    width:48px; height:48px;
+    margin-bottom:14px;
+    stroke:#C7D6DB;
+  }
+
+  .cards-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:26px;
+  }
+  @media (max-width:880px){
+    .cards-grid{ grid-template-columns:1fr; }
+    header{ flex-direction:column; gap:16px; }
+  }
+
+  .card{
+    background:var(--white);
+    border-radius:20px;
+    padding:30px 26px;
+    box-shadow:0 10px 26px rgba(18,59,84,0.08);
+    border:1px solid rgba(18,59,84,0.05);
+    opacity:0;
+    transform:translateY(18px);
+    animation:fadeUp .55s ease forwards;
+    position:relative;
+    overflow:hidden;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 36px rgba(18,59,84,0.16);
+  }
+  .card:nth-child(1){ animation-delay:.05s; }
+  .card:nth-child(2){ animation-delay:.18s; }
+  .card:nth-child(3){ animation-delay:.31s; }
+
+  .card-icon{
+    width:54px; height:54px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:18px;
+  }
+  .card-icon svg{ width:26px; height:26px; }
+  .card:nth-child(1) .card-icon{ background:linear-gradient(135deg, var(--deep-blue), var(--mid-blue)); }
+  .card:nth-child(2) .card-icon{ background:linear-gradient(135deg, var(--terracotta), #E0895F); }
+  .card:nth-child(3) .card-icon{ background:linear-gradient(135deg, var(--gold), #E3C25C); }
+  .card-icon svg{ stroke:#fff; }
+
+  .card-tag{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    margin-bottom:8px;
+    display:block;
+  }
+
+  .card h3{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-weight:600;
+    color:var(--deep-blue);
+    margin-bottom:10px;
+    line-height:1.4;
+  }
+  [dir="rtl"] .card h3{ font-family:'Cairo', sans-serif; font-weight:800; }
+
+  .card p{
+    font-size:14.5px;
+    color:#54707D;
+  }
+
+  .card-footer{
+    margin-top:18px;
+    padding-top:16px;
+    border-top:1px dashed #E5ECEF;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:flex-start;
+    font-size:13px;
+    color:var(--mid-blue);
+    font-weight:600;
+    gap:12px;
+  }
+
+  .book-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--terracotta);
+    color:#fff;
+    padding:8px 16px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    text-decoration:none;
+    transition:background .2s ease, transform .2s ease;
+  }
+  .book-btn:hover{
+    background:#A3492A;
+    transform:scale(1.02);
+  }
+
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .email-capture{
+    max-width:760px;
+    margin:60px auto 20px;
+    text-align:center;
+    padding:30px 20px;
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(18,59,84,0.06);
+  }
+  .email-capture h3{
+    font-size:20px;
+    color:var(--deep-blue);
+    margin-bottom:6px;
+  }
+  .email-capture p{
+    color:#5C7684;
+    font-size:14px;
+    margin-bottom:18px;
+  }
+  .email-capture form{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    justify-content:center;
+  }
+  .email-capture input{
+    padding:12px 20px;
+    border:2px solid #E7EEF1;
+    border-radius:999px;
+    font-family:'Cairo', sans-serif;
+    font-size:15px;
+    flex:1;
+    min-width:220px;
+    outline:none;
+  }
+  .email-capture input:focus{
+    border-color:var(--mid-blue);
+  }
+  .email-capture button{
+    background:var(--deep-blue);
+    color:#fff;
+    border:none;
+    padding:12px 30px;
+    border-radius:999px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background .2s ease;
+  }
+  .email-capture button:hover{
+    background:var(--mid-blue);
+  }
+
+  footer{
+    text-align:center;
+    padding:26px 6% 40px;
+    font-size:13px;
+    color:#9FB1B8;
+  }
+</style>
+</head>
+<body>
+
+<div class="tile-pattern"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div class="logo-text">
+      <span class="name-lat">Rihla</span>
+      <span class="name-ar" data-i18n="brandTag">رحلتك تبدأ من هنا</span>
+    </div>
+  </div>
+  <div class="lang-switch">
+    <button data-ui-lang="ar" class="active">AR</button>
+    <button data-ui-lang="en">EN</button>
+    <button data-ui-lang="fr">FR</button>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="eyebrow" data-i18n="eyebrow">مساعد سفر بالذكاء الاصطناعي</span>
+  <h1 data-i18n="heroTitle">اكتب حلمك... ودعنا نرسم لك الرحلة</h1>
+  <p class="subhead" data-i18n="heroSub">صف لنا وجهتك، ميزانيتك، أو نوع الرحلة التي تحلم بها — بالعربية، الإنجليزية، أو الفرنسية — وسنقترح عليك خطة مثالية فورًا.</p>
+
+  <div class="search-panel">
+    <textarea id="searchInput" data-i18n-placeholder="placeholder" placeholder="مثال: أريد رحلة رومانسية لمدة 5 أيام على الريفيرا الفرنسية مع مطاعم راقية..."></textarea>
+    <div class="panel-footer">
+      <span class="hint" data-i18n="hint">💡 الذكاء الاصطناعي سيتعرف على لغتك تلقائيًا</span>
+      <button class="search-btn" id="searchBtn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="spinner"></span>
+        <span data-i18n="btnText">ابحث عن رحلتي</span>
+      </button>
+    </div>
+  </div>
+
+  <svg class="coastline" viewBox="0 0 1200 80" preserveAspectRatio="none">
+    <path d="M0,40 C150,80 300,0 450,35 C600,70 750,10 900,40 C1050,70 1150,20 1200,45 L1200,80 L0,80 Z" fill="#2E7D9E" opacity="0.14"/>
+    <path d="M0,55 C200,20 350,75 550,45 C700,22 850,60 1000,35 C1100,20 1150,50 1200,40 L1200,80 L0,80 Z" fill="#C4643F" opacity="0.10"/>
+  </svg>
+</section>
+
+<section class="results-section">
+  <div class="results-heading" id="resultsHeading">
+    <h2 data-i18n="resultsTitle">اقتراحاتنا لك</h2>
+    <p data-i18n="resultsSub">بُنيت بناءً على ما كتبته للتو</p>
+  </div>
+
+  <div id="resultsArea">
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21c-4-4.5-7-8.5-7-12a7 7 0 1 1 14 0c0 3.5-3 7.5-7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+      <p data-i18n="emptyText">النتائج ستظهر هنا بعد بحثك...</p>
+    </div>
+  </div>
+
+  <div class="email-capture">
+    <h3 data-i18n="emailTitle">احصل على خطتك المتكاملة عبر البريد</h3>
+    <p data-i18n="emailSub">أدخل إيميلك وسنرسل لك تفاصيل هذه الرحلة وجميع خيارات الحجز.</p>
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="email" name="email" placeholder="your@email.com" required>
+      <button type="submit" data-i18n="emailBtn">أرسل لي الخطة</button>
+    </form>
+  </div>
+</section>
+
+<footer data-i18n="footer">© 2026 Rihla — نموذج أولي تجريبي لعرضه على العملاء</footer>
+
+<script>
+/* ============ 1. الخادم الخاص بي (يعمل 100%) ============ */
+const PROXY_URL = 'https://rihla-proxy.vercel.app/api/chat';
+
+/* ============ 2. ترجمات واجهة المستخدم ============ */
+const UI_STRINGS = {
+  ar: {
+    brandTag: "رحلتك تبدأ من هنا",
+    eyebrow: "مساعد سفر بالذكاء الاصطناعي",
+    heroTitle: "اكتب حلمك... ودعنا نرسم لك الرحلة",
+    heroSub: "صف لنا وجهتك، ميزانيتك، أو نوع الرحلة التي تحلم بها — بالعربية، الإنجليزية، أو الفرنسية — وسنقترح عليك خطة مثالية فورًا.",
+    placeholder: "مثال: أريد رحلة رومانسية لمدة 5 أيام على الريفيرا الفرنسية مع مطاعم راقية...",
+    hint: "💡 الذكاء الاصطناعي سيتعرف على لغتك تلقائيًا",
+    btnText: "ابحث عن رحلتي",
+    resultsTitle: "اقتراحاتنا لك",
+    resultsSub: "بُنيت بناءً على ما كتبته للتو",
+    emptyText: "النتائج ستظهر هنا بعد بحثك...",
+    footer: "© 2026 Rihla — نموذج أولي تجريبي لعرضه على العملاء",
+    emailTitle: "احصل على خطتك المتكاملة عبر البريد",
+    emailSub: "أدخل إيميلك وسنرسل لك تفاصيل هذه الرحلة وجميع خيارات الحجز.",
+    emailBtn: "أرسل لي الخطة",
+    bookNow: "احجز الآن"
+  },
+  en: {
+    brandTag: "Your journey starts here",
+    eyebrow: "AI Travel Assistant",
+    heroTitle: "Write your dream trip, we'll sketch the journey",
+    heroSub: "Tell us your destination, budget, or the kind of trip you're dreaming of — in Arabic, English, or French — and we'll suggest the perfect plan instantly.",
+    placeholder: "e.g. I want a romantic 5-day trip to the French Riviera with fine dining...",
+    hint: "💡 Our AI will detect your language automatically",
+    btnText: "Find my trip",
+    resultsTitle: "Suggestions for you",
+    resultsSub: "Built from what you just wrote",
+    emptyText: "Your results will appear here after you search...",
+    footer: "© 2026 Rihla — a demo prototype for client presentations",
+    emailTitle: "Get your full plan via email",
+    emailSub: "Enter your email to get all details and booking options.",
+    emailBtn: "Send me the plan",
+    bookNow: "Book Now"
+  },
+  fr: {
+    brandTag: "Votre voyage commence ici",
+    eyebrow: "Assistant de voyage IA",
+    heroTitle: "Écrivez votre rêve, on trace le voyage",
+    heroSub: "Décrivez-nous votre destination, votre budget ou le type de séjour dont vous rêvez — en arabe, en anglais ou en français — et nous vous proposerons un plan idéal instantanément.",
+    placeholder: "ex. Je veux un voyage romantique de 5 jours sur la Côte d'Azur avec de bons restaurants...",
+    hint: "💡 Notre IA détectera votre langue automatiquement",
+    btnText: "Trouver mon voyage",
+    resultsTitle: "Nos suggestions",
+    resultsSub: "Basées sur ce que vous venez d'écrire",
+    emptyText: "Vos résultats apparaîtront ici après la recherche...",
+    footer: "© 2026 Rihla — prototype de démonstration pour vos clients",
+    emailTitle: "Recevez votre plan complet par e-mail",
+    emailSub: "Entrez votre e-mail pour recevoir les détails et options de réservation.",
+    emailBtn: "Envoyez-moi le plan",
+    bookNow: "Réserver maintenant"
+  }
+};
+
+function applyUILanguage(lang){
+  const dict = UI_STRINGS[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key]) el.textContent = dict[key];
+  });
+  const ta = document.getElementById('searchInput');
+  ta.placeholder = dict.placeholder;
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
+  document.querySelectorAll('.lang-switch button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.uiLang === lang);
+  });
+}
+
+document.querySelectorAll('.lang-switch button').forEach(btn=>{
+  btn.addEventListener('click', ()=> applyUILanguage(btn.dataset.uiLang));
+});
+
+/* ============ 3. اكتشاف اللغة ============ */
+function detectLanguage(text){
+  const arabicPattern = /[\u0600-\u06FF]/;
+  if(arabicPattern.test(text)) return 'ar';
+
+  const frenchSignals = /[àâçéèêëîïôûùüÿœæ]|(\b(le|la|les|un|une|des|est|voyage|plage|vacances|je|nous|voudrais|s'il|à|avec)\b)/i;
+  if(frenchSignals.test(text)) return 'fr';
+
+  return 'en';
+}
+
+/* ============ 4. طلب الذكاء الاصطناعي ============ */
+async function fetchAIResponse(userInput, detectedLang) {
+  const systemPrompt = `أنت مساعد سفر ذكي لمدينة كان والريفيرا الفرنسية. المستخدم سأل: "${userInput}". قم بإنشاء 3 اقتراحات سياحية (مطاعم، أنشطة، أو خطط سفر) تلبي طلبه.
+
+    يجب أن يكون الرد بتنسيق JSON صحيح تماماً كما يلي:
+    [
+      { "tag": "نوع الخدمة", "title": "اسم الخدمة", "desc": "وصف مختصر", "footer": "سعر تقريبي أو وقت", "bookingLink": "https://www.booking.com/searchresults.html?ss=Cannes,+France", "icon": "route" },
+      ...
+    ]
+    استخدم أيقونات: "route", "fork", "sun".
+    اكتب الرد باللغة: ${detectedLang === 'ar' ? 'العربية' : detectedLang === 'fr' ? 'الفرنسية' : 'الإنجليزية'}.
+    فقط قم بإرجاع JSON صحيح، لا تكتب أي مقدمات أو تعليقات.`;
+
+  try {
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: userInput,
+        language: detectedLang,
+        systemPrompt: systemPrompt
+      })
+    });
+
+    const data = await response.json();
+    return JSON.parse(data.reply);
+  } catch (error) {
+    console.error('AI Error:', error);
+    return [{
+      tag: "خطأ في الاتصال",
+      title: "تعذر الاتصال بالخادم",
+      desc: "يرجى المحاولة مرة أخرى بعد قليل.",
+      footer: "خطأ تقني",
+      icon: "route"
+    }];
+  }
+}
+
+/* ============ 5. عرض البطاقات ============ */
+const ICONS = {
+  route: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8 19h6a4 4 0 0 0 4-4V9"/><path d="M16 5H10a4 4 0 0 0-4 4v1"/></svg>',
+  fork: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7"/><path d="M4 2v5a3 3 0 0 0 6 0V2"/><path d="M7 9v13"/><path d="M17 2c-2 0-3 2-3 5v3h3v11"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>'
+};
+
+function renderCards(cards, lang){
+  const grid = document.createElement('div');
+  grid.className = 'cards-grid';
+
+  const dict = UI_STRINGS[lang];
+
+  cards.forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const link = c.bookingLink || 'https://www.booking.com/searchresults.html?ss=Cannes,+France';
+    card.innerHTML = `
+      <div class="card-icon">${ICONS[c.icon]}</div>
+      <span class="card-tag">${c.tag}</span>
+      <h3>${c.title}</h3>
+      <p>${c.desc}</p>
+      <div class="card-footer">
+        <span>${c.footer}</span>
+        <a href="${link}" target="_blank" class="book-btn" data-i18n="bookNow">${dict.bookNow}</a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const resultsArea = document.getElementById('resultsArea');
+  resultsArea.innerHTML = '';
+  resultsArea.appendChild(grid);
+}
+
+/* ============ 6. منطق زر البحث ============ */
+const searchBtn = document.getElementById('searchBtn');
+const searchInput = document.getElementById('searchInput');
+const resultsHeading = document.getElementById('resultsHeading');
+
+searchBtn.addEventListener('click', async ()=>{
+  const text = searchInput.value.trim();
+  if(!text){
+    searchInput.focus();
+    searchInput.style.borderColor = '#C4643F';
+    setTimeout(()=> searchInput.style.borderColor = '', 900);
+    return;
+  }
+
+  const detectedLang = detectLanguage(text);
+  searchBtn.classList.add('loading');
+
+  const cards = await fetchAIResponse(text, detectedLang);
+
+  searchBtn.classList.remove('loading');
+  renderCards(cards, detectedLang);
+  resultsHeading.classList.add('show');
+  document.getElementById('emptyState')?.remove();
+  document.getElementById('resultsArea').scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+searchInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && e.ctrlKey){
+    searchBtn.click();
+  }
+});
+</script>
+
+</body>
+</html>
